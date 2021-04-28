@@ -1,0 +1,8 @@
+FROM openshift/origin-release:golang-1.15 AS builder
+WORKDIR /app/
+COPY . .
+RUN go build -mod vendor -o /tmp/webhook ./cmd/webhook
+
+FROM openshift/origin-base
+COPY --from=builder /tmp/webhook /ko-app/webhook
+ENTRYPOINT ["/ko-app/webhook"]
