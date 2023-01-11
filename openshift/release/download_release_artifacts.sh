@@ -9,21 +9,22 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 # TODO: automatically detects the version via branch name or something.
 VERSION=$1
 
-istio_files=(200-clusterrole 400-config-istio 500-controller 500-webhook-deployment 500-webhook-secret 500-webhook-service 600-mutating-webhook 600-validating-webhook 0-networkpolicy-mesh)
-
 function resolve_resources(){
   local dir=$1
   local resolved_file_name=$2
+
+  # Exclude Istio resources that are deployed by users.
+  local exclude_option="-not -name 202-gateway.yaml \
+                        -not -name 202-gateway.yaml \
+			-not -name 203-local-gateway.yaml \
+			-not -name 400-webhook-peer-authentication.yaml"
 
   echo "Writing resolved yaml to $resolved_file_name"
 
   > "$resolved_file_name"
 
-  for file_prefix in "${istio_files[@]}"
-  do
-    for yaml in `find $dir -name "${file_prefix}.yaml" | sort`; do
-      resolve_file "$yaml" "$resolved_file_name"
-    done
+  for yaml in `find $dir -type f $exclude_option -name "*.yaml" | sort`; do
+    resolve_file "$yaml" "$resolved_file_name"
   done
 }
 
