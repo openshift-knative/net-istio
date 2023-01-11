@@ -15,7 +15,6 @@ function resolve_resources(){
 
   # Exclude Istio resources that are deployed by users.
   local exclude_option="-not -name 202-gateway.yaml \
-                        -not -name 202-gateway.yaml \
 			-not -name 203-local-gateway.yaml \
 			-not -name 400-webhook-peer-authentication.yaml"
 
