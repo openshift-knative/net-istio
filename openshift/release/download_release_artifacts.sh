@@ -1,45 +1,54 @@
 #!/usr/bin/env bash
 
-# Usage example: ./download_release_artifacts.sh v1.8.0
+# Usage example: ./download_release_artifacts.sh 1.8.0
 
 set -Eeuo pipefail
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-patches_path="${SCRIPT_DIR}/../patches"
-artifacts_path="${SCRIPT_DIR}/artifacts"
-mkdir -p "${patches_path}"
-mkdir -p "${artifacts_path}"
-# These files could in theory change from release to release, though their names should
-# be fairly stable.
-istio_files=(200-clusterrole 400-config-istio 500-controller 500-webhook-deployment 500-webhook-secret 500-webhook-service 600-mutating-webhook 600-validating-webhook)
+# TODO: automatically detects the version via branch name or something.
+VERSION=$1
 
-function download_ingress {
-  component=$1
-  version=$2
-  shift
-  shift
+istio_files=(200-clusterrole 400-config-istio 500-controller 500-webhook-deployment 500-webhook-secret 500-webhook-service 600-mutating-webhook 600-validating-webhook 0-networkpolicy-mesh)
 
-  files=("$@")
+function resolve_resources(){
+  local dir=$1
+  local resolved_file_name=$2
 
-  component_dir="${artifacts_path}"
-  release_suffix="${version%?}0"
-  target_dir="${component_dir}"
-  rm -r "$component_dir"
-  mkdir -p "$target_dir"
+  echo "Writing resolved yaml to $resolved_file_name"
 
-  for (( i=0; i<${#files[@]}; i++ ));
+  > "$resolved_file_name"
+
+  for file_prefix in "${istio_files[@]}"
   do
-    index=$(( i+1 ))
-    file="${files[$i]}.yaml"
-    target_file="$target_dir/$index-$file"
-
-    url="https://raw.githubusercontent.com/knative-sandbox/${component}/knative-${version}/config/${file}"
-    wget --no-check-certificate "$url" -O "$target_file"
+    for yaml in `find $dir -name "${file_prefix}.yaml" | sort`; do
+      resolve_file "$yaml" "$resolved_file_name"
+    done
   done
 }
 
-download_ingress net-istio "$1" "${istio_files[@]}"
+function resolve_file() {
+  local file=$1
+  local to=$2
 
-# Add networkpolicy for webhook when net-istio is enabled.
-git apply "${patches_path}/001-networkpolicy-mesh.patch"
+  echo "---" >> "$to"
+
+  echo $file
+
+  sed -e "s+app.kubernetes.io/version: devel+app.kubernetes.io/version: \""$VERSION"\"+" \
+      "$file" >> "$to"
+
+}
+
+readonly YAML_OUTPUT_DIR="openshift/release/artifacts/"
+readonly NETWORK_POLICY_YAML=${YAML_OUTPUT_DIR}/0-networkpolicy-mesh.yaml
+readonly NET_ISTIO_YAML=${YAML_OUTPUT_DIR}/1-net-istio.yaml
+
+# Clean up
+rm -rf "$YAML_OUTPUT_DIR"
+mkdir -p "$YAML_OUTPUT_DIR"
+
+patches_path="${SCRIPT_DIR}/../patches"
+
+resolve_resources "config/" "$NET_ISTIO_YAML"
+resolve_resources "openshift/release/extra/" "$NETWORK_POLICY_YAML"
