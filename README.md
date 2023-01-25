@@ -1,12 +1,16 @@
-# Knative `net-istio`
+# OpenShift net-istio
 
-[![GoDoc](https://godoc.org/knative.dev/net-istio?status.svg)](https://godoc.org/knative.dev/net-istio)
-[![Go Report Card](https://goreportcard.com/badge/knative/net-istio)](https://goreportcard.com/report/knative/net-istio)
+This repository holds OpenShift's fork of
+[`knative/net-istio`](https://github.com/knative-sandbox/net-istio) with additions and
+fixes needed only for the OpenShift side of things.
 
-Knative `net-istio` defines a KIngress controller for Istio.
+# OpenShift net-istio Release procedure
 
-To learn more about Knative, please visit our
-[Knative docs](https://github.com/knative/docs) repository.
+Currently the release cut is not automated but just one command.
+Once upstream cuts the branch (e.g. upstream cut `release-1.9` branch), just run:
 
-If you are interested in contributing, see [CONTRIBUTING.md](./CONTRIBUTING.md)
-and [DEVELOPMENT.md](./DEVELOPMENT.md).
+```sh
+$ openshift/release/create-release-branch.sh release-1.9
+```
+
+Then, push the branch against to this repository.
