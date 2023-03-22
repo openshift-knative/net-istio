@@ -50,5 +50,7 @@ mkdir -p "$YAML_OUTPUT_DIR"
 
 patches_path="${SCRIPT_DIR}/../patches"
 
+git apply "${patches_path}"/*
+
 resolve_resources "config/" "$NET_ISTIO_YAML"
 resolve_resources "openshift/release/extra/" "$NETWORK_POLICY_YAML"
