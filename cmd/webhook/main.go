@@ -84,7 +84,6 @@ func main() {
 		Port:        8443,
 	})
 
-	ctx = sharedmain.WithHealthProbesDisabled(ctx)
 	sharedmain.WebhookMainWithContext(
 		ctx, "net-istio-webhook",
 		certificates.NewController,
