@@ -1,5 +1,5 @@
 diff --git a/config/500-controller.yaml b/config/500-controller.yaml
-index 892ab1f2..334e1306 100644
+index 51548578..14acf2e9 100644
 --- a/config/500-controller.yaml
 +++ b/config/500-controller.yaml
 @@ -78,8 +78,6 @@ spec:
@@ -9,18 +9,18 @@ index 892ab1f2..334e1306 100644
 -          seccompProfile:
 -            type: RuntimeDefault
  
-         ports:
-         - name: metrics
+         readinessProbe:
+           httpGet:
 diff --git a/config/500-webhook-deployment.yaml b/config/500-webhook-deployment.yaml
-index 156bffee..eb14e21d 100644
+index 142dc327..76a5549c 100644
 --- a/config/500-webhook-deployment.yaml
 +++ b/config/500-webhook-deployment.yaml
-@@ -75,8 +75,6 @@ spec:
+@@ -79,8 +79,6 @@ spec:
            capabilities:
              drop:
                - ALL
 -          seccompProfile:
 -            type: RuntimeDefault
  
-         ports:
-         - name: metrics
+         readinessProbe:
+           periodSeconds: 1
