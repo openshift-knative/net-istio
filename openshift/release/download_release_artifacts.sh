@@ -43,12 +43,13 @@ function resolve_file() {
 readonly YAML_OUTPUT_DIR="openshift/release/artifacts/"
 readonly NETWORK_POLICY_YAML=${YAML_OUTPUT_DIR}/0-networkpolicy-mesh.yaml
 readonly NET_ISTIO_YAML=${YAML_OUTPUT_DIR}/1-net-istio.yaml
+readonly patches_path="${SCRIPT_DIR}/../patches"
 
 # Clean up
 rm -rf "$YAML_OUTPUT_DIR"
 mkdir -p "$YAML_OUTPUT_DIR"
-
-patches_path="${SCRIPT_DIR}/../patches"
+# clean up before applying patch and ignore error for new patch file.
+git apply -R "${patches_path}"/* || true
 
 git apply "${patches_path}"/*
 
