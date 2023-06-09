@@ -41,8 +41,8 @@ function resolve_file() {
 }
 
 readonly YAML_OUTPUT_DIR="openshift/release/artifacts/"
-readonly NETWORK_POLICY_YAML=${YAML_OUTPUT_DIR}/0-networkpolicy-mesh.yaml
-readonly NET_ISTIO_YAML=${YAML_OUTPUT_DIR}/1-net-istio.yaml
+readonly NETWORK_POLICY_YAML=${YAML_OUTPUT_DIR}/net-istio-netpolicies-mesh.yaml
+readonly NET_ISTIO_YAML=${YAML_OUTPUT_DIR}/net-istio-core.yaml
 readonly patches_path="${SCRIPT_DIR}/../patches"
 
 # Clean up
