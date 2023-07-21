@@ -1323,8 +1323,9 @@ type GatewayOpt func(*v1beta1.Gateway)
 func gateway(name, namespace string, servers []*istiov1beta1.Server, opts ...GatewayOpt) *v1beta1.Gateway {
 	gw := &v1beta1.Gateway{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
+			Name:        name,
+			Namespace:   namespace,
+			Annotations: map[string]string{resources.MaistraManageRouteAnnotationKey: "false"},
 		},
 		Spec: istiov1beta1.Gateway{
 			Servers: servers,
