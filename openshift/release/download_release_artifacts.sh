@@ -41,7 +41,6 @@ function resolve_file() {
 }
 
 readonly YAML_OUTPUT_DIR="openshift/release/artifacts/"
-readonly NETWORK_POLICY_YAML=${YAML_OUTPUT_DIR}/net-istio-netpolicies-mesh.yaml
 readonly NET_ISTIO_YAML=${YAML_OUTPUT_DIR}/net-istio-core.yaml
 readonly patches_path="${SCRIPT_DIR}/../patches"
 
@@ -54,4 +53,3 @@ git apply -R "${patches_path}"/* || true
 git apply "${patches_path}"/*
 
 resolve_resources "config/" "$NET_ISTIO_YAML"
-resolve_resources "openshift/release/extra/" "$NETWORK_POLICY_YAML"
