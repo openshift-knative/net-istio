@@ -42,12 +42,13 @@ import (
 )
 
 const (
-	GatewayHTTPPort              = 80
-	ExternalGatewayHTTPSPort     = 443
-	ClusterLocalGatewayHTTPSPort = 8444
-	dns1123LabelMaxLength        = 63 // Public for testing only.
-	dns1123LabelFmt              = "[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?"
-	localGatewayPostfix          = "-local"
+	GatewayHTTPPort                 = 80
+	ExternalGatewayHTTPSPort        = 443
+	ClusterLocalGatewayHTTPSPort    = 8444
+	dns1123LabelMaxLength           = 63 // Public for testing only.
+	dns1123LabelFmt                 = "[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?"
+	localGatewayPostfix             = "-local"
+	MaistraManageRouteAnnotationKey = "maistra.io/manageRoute"
 )
 
 var httpServerPortName = "http-server"
@@ -204,6 +205,9 @@ func makeWildcardTLSGateways(originWildcardSecrets map[string]*corev1.Secret,
 				Name:            WildcardGatewayName(secret.Name, gatewayService.Namespace, gatewayService.Name),
 				Namespace:       secret.Namespace,
 				OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(secret, gvk)},
+				Annotations: map[string]string{
+					MaistraManageRouteAnnotationKey: "false",
+				},
 			},
 			Spec: istiov1beta1.Gateway{
 				Selector: gatewayService.Spec.Selector,
@@ -258,6 +262,9 @@ func makeIngressGateway(ing *v1alpha1.Ingress, visibility v1alpha1.IngressVisibi
 			Labels: map[string]string{
 				// We need this label to find out all Gateways of a given Ingress.
 				networking.IngressLabelKey: ing.GetName(),
+			},
+			Annotations: map[string]string{
+				MaistraManageRouteAnnotationKey: "false",
 			},
 		},
 		Spec: istiov1beta1.Gateway{
