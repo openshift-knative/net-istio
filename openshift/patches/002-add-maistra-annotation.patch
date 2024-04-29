@@ -1,0 +1,120 @@
+diff --git a/pkg/reconciler/ingress/ingress_test.go b/pkg/reconciler/ingress/ingress_test.go
+index 3a2cb732..acd84867 100644
+--- a/pkg/reconciler/ingress/ingress_test.go
++++ b/pkg/reconciler/ingress/ingress_test.go
+@@ -1525,8 +1525,9 @@ type GatewayOpt func(*v1beta1.Gateway)
+ func gateway(name, namespace string, servers []*istiov1beta1.Server, opts ...GatewayOpt) *v1beta1.Gateway {
+ 	gw := &v1beta1.Gateway{
+ 		ObjectMeta: metav1.ObjectMeta{
+-			Name:      name,
+-			Namespace: namespace,
++			Name:        name,
++			Namespace:   namespace,
++			Annotations: map[string]string{resources.MaistraManageRouteAnnotationKey: "false"},
+ 		},
+ 		Spec: istiov1beta1.Gateway{
+ 			Servers: servers,
+diff --git a/pkg/reconciler/ingress/resources/gateway.go b/pkg/reconciler/ingress/resources/gateway.go
+index cd7b320f..06310edf 100644
+--- a/pkg/reconciler/ingress/resources/gateway.go
++++ b/pkg/reconciler/ingress/resources/gateway.go
+@@ -42,12 +42,13 @@ import (
+ )
+
+ const (
+-	GatewayHTTPPort              = 80
+-	ExternalGatewayHTTPSPort     = 443
+-	ClusterLocalGatewayHTTPSPort = 8444
+-	dns1123LabelMaxLength        = 63 // Public for testing only.
+-	dns1123LabelFmt              = "[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?"
+-	localGatewayPostfix          = "-local"
++	GatewayHTTPPort                 = 80
++	ExternalGatewayHTTPSPort        = 443
++	ClusterLocalGatewayHTTPSPort    = 8444
++	dns1123LabelMaxLength           = 63 // Public for testing only.
++	dns1123LabelFmt                 = "[a-zA-Z0-9](?:[-a-zA-Z0-9]*[a-zA-Z0-9])?"
++	localGatewayPostfix             = "-local"
++	MaistraManageRouteAnnotationKey = "maistra.io/manageRoute"
+ )
+
+ var httpServerPortName = "http-server"
+@@ -204,6 +205,9 @@ func makeWildcardTLSGateways(originWildcardSecrets map[string]*corev1.Secret,
+ 				Name:            WildcardGatewayName(secret.Name, gatewayService.Namespace, gatewayService.Name),
+ 				Namespace:       secret.Namespace,
+ 				OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(secret, gvk)},
++				Annotations: map[string]string{
++					MaistraManageRouteAnnotationKey: "false",
++				},
+ 			},
+ 			Spec: istiov1beta1.Gateway{
+ 				Selector: gatewayService.Spec.Selector,
+@@ -259,6 +263,9 @@ func makeIngressGateway(ing *v1alpha1.Ingress, visibility v1alpha1.IngressVisibi
+ 				// We need this label to find out all Gateways of a given Ingress.
+ 				networking.IngressLabelKey: ing.GetName(),
+ 			},
++			Annotations: map[string]string{
++				MaistraManageRouteAnnotationKey: "false",
++			},
+ 		},
+ 		Spec: istiov1beta1.Gateway{
+ 			Selector: selector,
+diff --git a/pkg/reconciler/ingress/resources/gateway_test.go b/pkg/reconciler/ingress/resources/gateway_test.go
+index b3b63a51..e166e006 100644
+--- a/pkg/reconciler/ingress/resources/gateway_test.go
++++ b/pkg/reconciler/ingress/resources/gateway_test.go
+@@ -618,6 +618,7 @@ func TestMakeWildcardGateways(t *testing.T) {
+ 				Name:            WildcardGatewayName(wildcardSecret.Name, "istio-system", "istio-ingressgateway"),
+ 				Namespace:       system.Namespace(),
+ 				OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(wildcardSecret, secretGVK)},
++				Annotations:     map[string]string{MaistraManageRouteAnnotationKey: "false"},
+ 			},
+ 			Spec: istiov1beta1.Gateway{
+ 				Selector: selector,
+@@ -655,6 +656,7 @@ func TestMakeWildcardGateways(t *testing.T) {
+ 				Name:            WildcardGatewayName(wildcardSecret.Name, system.Namespace(), "istio-ingressgateway"),
+ 				Namespace:       system.Namespace(),
+ 				OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(wildcardSecret, secretGVK)},
++				Annotations:     map[string]string{MaistraManageRouteAnnotationKey: "false"},
+ 			},
+ 			Spec: istiov1beta1.Gateway{
+ 				Selector: selector,
+@@ -759,6 +761,7 @@ func TestMakeExternalIngressGateways(t *testing.T) {
+ 				Labels: map[string]string{
+ 					networking.IngressLabelKey: "ingress",
+ 				},
++				Annotations: map[string]string{MaistraManageRouteAnnotationKey: "false"},
+ 			},
+ 			Spec: istiov1beta1.Gateway{
+ 				Selector: sel,
+@@ -912,6 +915,7 @@ func TestMakeIngressTLSGateways(t *testing.T) {
+ 				Labels: map[string]string{
+ 					networking.IngressLabelKey: "ingress",
+ 				},
++				Annotations: map[string]string{MaistraManageRouteAnnotationKey: "false"},
+ 			},
+ 			Spec: istiov1beta1.Gateway{
+ 				Selector: selector,
+@@ -955,6 +959,7 @@ func TestMakeIngressTLSGateways(t *testing.T) {
+ 				Labels: map[string]string{
+ 					networking.IngressLabelKey: "ingress",
+ 				},
++				Annotations: map[string]string{MaistraManageRouteAnnotationKey: "false"},
+ 			},
+ 			Spec: istiov1beta1.Gateway{
+ 				Selector: selector,
+@@ -1001,6 +1006,7 @@ func TestMakeIngressTLSGateways(t *testing.T) {
+ 				Labels: map[string]string{
+ 					networking.IngressLabelKey: "ingress",
+ 				},
++				Annotations: map[string]string{MaistraManageRouteAnnotationKey: "false"},
+ 			},
+ 			Spec: istiov1beta1.Gateway{
+ 				Selector: selector,
+@@ -1044,6 +1050,7 @@ func TestMakeIngressTLSGateways(t *testing.T) {
+ 				Labels: map[string]string{
+ 					networking.IngressLabelKey: "ingress.com",
+ 				},
++				Annotations: map[string]string{MaistraManageRouteAnnotationKey: "false"},
+ 			},
+ 			Spec: istiov1beta1.Gateway{
+ 				Selector: selector,
