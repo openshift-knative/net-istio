@@ -6,7 +6,7 @@ require (
 	github.com/google/go-cmp v0.6.0
 	go.uber.org/zap v1.26.0
 	golang.org/x/sync v0.6.0
-	google.golang.org/protobuf v1.32.0
+	google.golang.org/protobuf v1.33.0
 	istio.io/api v1.20.2
 	istio.io/client-go v1.20.2
 	k8s.io/api v0.28.5
