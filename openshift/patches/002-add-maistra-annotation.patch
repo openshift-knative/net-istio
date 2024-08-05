@@ -1,8 +1,8 @@
 diff --git a/pkg/reconciler/ingress/ingress_test.go b/pkg/reconciler/ingress/ingress_test.go
-index 3a2cb732..acd84867 100644
+index 23f97c87..4b015dec 100644
 --- a/pkg/reconciler/ingress/ingress_test.go
 +++ b/pkg/reconciler/ingress/ingress_test.go
-@@ -1525,8 +1525,9 @@ type GatewayOpt func(*v1beta1.Gateway)
+@@ -1278,8 +1278,9 @@ type GatewayOpt func(*v1beta1.Gateway)
  func gateway(name, namespace string, servers []*istiov1beta1.Server, opts ...GatewayOpt) *v1beta1.Gateway {
  	gw := &v1beta1.Gateway{
  		ObjectMeta: metav1.ObjectMeta{
@@ -15,7 +15,7 @@ index 3a2cb732..acd84867 100644
  		Spec: istiov1beta1.Gateway{
  			Servers: servers,
 diff --git a/pkg/reconciler/ingress/resources/gateway.go b/pkg/reconciler/ingress/resources/gateway.go
-index cd7b320f..06310edf 100644
+index 4df6dae0..731b7aa6 100644
 --- a/pkg/reconciler/ingress/resources/gateway.go
 +++ b/pkg/reconciler/ingress/resources/gateway.go
 @@ -42,12 +42,13 @@ import (
@@ -38,7 +38,7 @@ index cd7b320f..06310edf 100644
  )
 
  var httpServerPortName = "http-server"
-@@ -204,6 +205,9 @@ func makeWildcardTLSGateways(originWildcardSecrets map[string]*corev1.Secret,
+@@ -201,6 +202,9 @@ func makeWildcardTLSGateways(originWildcardSecrets map[string]*corev1.Secret,
  				Name:            WildcardGatewayName(secret.Name, gatewayService.Namespace, gatewayService.Name),
  				Namespace:       secret.Namespace,
  				OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(secret, gvk)},
@@ -48,7 +48,7 @@ index cd7b320f..06310edf 100644
  			},
  			Spec: istiov1beta1.Gateway{
  				Selector: gatewayService.Spec.Selector,
-@@ -259,6 +263,9 @@ func makeIngressGateway(ing *v1alpha1.Ingress, visibility v1alpha1.IngressVisibi
+@@ -256,6 +260,9 @@ func makeIngressGateway(ing *v1alpha1.Ingress, visibility v1alpha1.IngressVisibi
  				// We need this label to find out all Gateways of a given Ingress.
  				networking.IngressLabelKey: ing.GetName(),
  			},
@@ -59,7 +59,7 @@ index cd7b320f..06310edf 100644
  		Spec: istiov1beta1.Gateway{
  			Selector: selector,
 diff --git a/pkg/reconciler/ingress/resources/gateway_test.go b/pkg/reconciler/ingress/resources/gateway_test.go
-index b3b63a51..e166e006 100644
+index 95ef0681..3d38cb92 100644
 --- a/pkg/reconciler/ingress/resources/gateway_test.go
 +++ b/pkg/reconciler/ingress/resources/gateway_test.go
 @@ -618,6 +618,7 @@ func TestMakeWildcardGateways(t *testing.T) {
