@@ -26,6 +26,8 @@ LABEL \
       summary="Red Hat OpenShift Serverless 1 Net Istio Webhook" \
       maintainer="serverless-support@redhat.com" \
       description="Red Hat OpenShift Serverless 1 Net Istio Webhook" \
-      io.k8s.display-name="Red Hat OpenShift Serverless 1 Net Istio Webhook"
+      io.k8s.display-name="Red Hat OpenShift Serverless 1 Net Istio Webhook" \
+      io.k8s.description="Red Hat OpenShift Serverless Net Istio Webhook" \
+      io.openshift.tags="webhook"
 
 ENTRYPOINT ["/ko-app/webhook"]
