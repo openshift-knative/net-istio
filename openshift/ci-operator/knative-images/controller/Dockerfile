@@ -26,6 +26,8 @@ LABEL \
       summary="Red Hat OpenShift Serverless 1 Net Istio Controller" \
       maintainer="serverless-support@redhat.com" \
       description="Red Hat OpenShift Serverless 1 Net Istio Controller" \
-      io.k8s.display-name="Red Hat OpenShift Serverless 1 Net Istio Controller"
+      io.k8s.display-name="Red Hat OpenShift Serverless 1 Net Istio Controller" \
+      io.k8s.description="Red Hat OpenShift Serverless Net Istio Controller" \
+      io.openshift.tags="controller"
 
 ENTRYPOINT ["/ko-app/controller"]
