@@ -118,3 +118,4 @@ index b3b63a51..e166e006 100644
  			},
  			Spec: istiov1beta1.Gateway{
  				Selector: selector,
+     
