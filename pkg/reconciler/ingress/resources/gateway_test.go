@@ -618,6 +618,7 @@ func TestMakeWildcardGateways(t *testing.T) {
 				Name:            WildcardGatewayName(wildcardSecret.Name, "istio-system", "istio-ingressgateway"),
 				Namespace:       system.Namespace(),
 				OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(wildcardSecret, secretGVK)},
+				Annotations:     map[string]string{MaistraManageRouteAnnotationKey: "false"},
 			},
 			Spec: istiov1beta1.Gateway{
 				Selector: selector,
@@ -655,6 +656,7 @@ func TestMakeWildcardGateways(t *testing.T) {
 				Name:            WildcardGatewayName(wildcardSecret.Name, system.Namespace(), "istio-ingressgateway"),
 				Namespace:       system.Namespace(),
 				OwnerReferences: []metav1.OwnerReference{*metav1.NewControllerRef(wildcardSecret, secretGVK)},
+				Annotations:     map[string]string{MaistraManageRouteAnnotationKey: "false"},
 			},
 			Spec: istiov1beta1.Gateway{
 				Selector: selector,
@@ -759,6 +761,7 @@ func TestMakeExternalIngressGateways(t *testing.T) {
 				Labels: map[string]string{
 					networking.IngressLabelKey: "ingress",
 				},
+				Annotations: map[string]string{MaistraManageRouteAnnotationKey: "false"},
 			},
 			Spec: istiov1beta1.Gateway{
 				Selector: sel,
@@ -912,6 +915,7 @@ func TestMakeIngressTLSGateways(t *testing.T) {
 				Labels: map[string]string{
 					networking.IngressLabelKey: "ingress",
 				},
+				Annotations: map[string]string{MaistraManageRouteAnnotationKey: "false"},
 			},
 			Spec: istiov1beta1.Gateway{
 				Selector: selector,
@@ -955,6 +959,7 @@ func TestMakeIngressTLSGateways(t *testing.T) {
 				Labels: map[string]string{
 					networking.IngressLabelKey: "ingress",
 				},
+				Annotations: map[string]string{MaistraManageRouteAnnotationKey: "false"},
 			},
 			Spec: istiov1beta1.Gateway{
 				Selector: selector,
@@ -1001,6 +1006,7 @@ func TestMakeIngressTLSGateways(t *testing.T) {
 				Labels: map[string]string{
 					networking.IngressLabelKey: "ingress",
 				},
+				Annotations: map[string]string{MaistraManageRouteAnnotationKey: "false"},
 			},
 			Spec: istiov1beta1.Gateway{
 				Selector: selector,
@@ -1044,6 +1050,7 @@ func TestMakeIngressTLSGateways(t *testing.T) {
 				Labels: map[string]string{
 					networking.IngressLabelKey: "ingress.com",
 				},
+				Annotations: map[string]string{MaistraManageRouteAnnotationKey: "false"},
 			},
 			Spec: istiov1beta1.Gateway{
 				Selector: selector,
