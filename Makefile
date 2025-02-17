@@ -1,4 +1,4 @@
 generate-release:
+	./hack/update-codegen.sh
 	./openshift/generate.sh
-	./hack/update-deps.sh
 .PHONY: generate-release
