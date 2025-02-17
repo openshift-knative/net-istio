@@ -7,8 +7,8 @@ require (
 	go.uber.org/zap v1.27.0
 	golang.org/x/sync v0.10.0
 	google.golang.org/protobuf v1.35.1
-	istio.io/api v1.22.2-0.20240619002433-8214ad1c7bd7
-	istio.io/client-go v1.22.2
+	istio.io/api v1.23.3-0.20241007150425-eb56b2cffca7
+	istio.io/client-go v1.23.5
 	k8s.io/api v0.30.3
 	k8s.io/apimachinery v0.30.3
 	k8s.io/client-go v0.30.3
