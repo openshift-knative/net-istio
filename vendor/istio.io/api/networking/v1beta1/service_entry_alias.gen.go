@@ -43,9 +43,7 @@ type ServiceEntry = v1alpha3.ServiceEntry
 // Location specifies whether the service is part of Istio mesh or
 // outside the mesh.  Location determines the behavior of several
 // features, such as service-to-service mTLS authentication, policy
-// enforcement, etc. When communicating with services outside the mesh,
-// Istio's mTLS authentication is disabled, and policy enforcement is
-// performed on the client-side as opposed to server-side.
+// enforcement, etc.
 type ServiceEntry_Location = v1alpha3.ServiceEntry_Location
 
 // Signifies that the service is external to the mesh. Typically used
@@ -106,5 +104,5 @@ const ServiceEntry_DNS_ROUND_ROBIN ServiceEntry_Resolution = v1alpha3.ServiceEnt
 type ServicePort = v1alpha3.ServicePort
 type ServiceEntryStatus = v1alpha3.ServiceEntryStatus
 
-// minor abstraction to allow for adding hostnames if relevant
+// A minor abstraction to allow for adding hostnames if relevant.
 type ServiceEntryAddress = v1alpha3.ServiceEntryAddress
