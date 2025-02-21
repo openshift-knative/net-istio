@@ -5,8 +5,8 @@ go 1.22
 require (
 	github.com/google/go-cmp v0.6.0
 	go.uber.org/zap v1.27.0
-	golang.org/x/sync v0.10.0
-	google.golang.org/protobuf v1.34.1
+	golang.org/x/sync v0.11.0
+	google.golang.org/protobuf v1.36.5
 	istio.io/api v1.22.2-0.20240619002433-8214ad1c7bd7
 	istio.io/client-go v1.22.2
 	k8s.io/api v0.29.2
