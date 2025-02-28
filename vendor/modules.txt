@@ -400,7 +400,7 @@ istio.io/api/label
 istio.io/api/meta/v1alpha1
 istio.io/api/networking/v1beta1
 istio.io/api/type/v1beta1
-# istio.io/client-go v1.22.8
+# istio.io/client-go v1.22.2
 ## explicit; go 1.22
 istio.io/client-go/pkg/apis/networking/v1beta1
 # k8s.io/api v0.29.14
