@@ -1,11 +1,12 @@
 module knative.dev/net-istio
 
 go 1.22.7
+toolchain go1.23.7
 
 require (
-	github.com/google/go-cmp v0.6.0
+	github.com/google/go-cmp v0.7.0
 	go.uber.org/zap v1.27.0
-	golang.org/x/sync v0.10.0
+	golang.org/x/sync v0.12.0
 	google.golang.org/protobuf v1.36.5
 	istio.io/api v1.24.3
 	istio.io/client-go v1.24.2
