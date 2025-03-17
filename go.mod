@@ -8,10 +8,10 @@ require (
 	golang.org/x/sync v0.10.0
 	google.golang.org/protobuf v1.35.1
 	istio.io/api v1.22.8
-	istio.io/client-go v1.22.2
-	k8s.io/api v0.30.10
-	k8s.io/apimachinery v0.30.10
-	k8s.io/client-go v0.30.10
+	istio.io/client-go v1.22.8
+	k8s.io/api v0.30.11
+	k8s.io/apimachinery v0.30.11
+	k8s.io/client-go v0.30.11
 	knative.dev/hack v0.0.0-20241010131451-05b2fb30cb4d
 	knative.dev/networking v0.0.0-20241022012959-60e29ff520dc
 	knative.dev/pkg v0.0.0-20241021183759-9b9d535af5ad
