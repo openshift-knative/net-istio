@@ -35,17 +35,6 @@ More info: <a href="https://istio.io/docs/reference/config/config-status/">https
 
 </td>
 </tr>
-<tr id="IstioStatus-observed_generation">
-<td><div class="field"><div class="name"><code><a href="#IstioStatus-observed_generation">observedGeneration</a></code></div>
-<div class="type">int64</div>
-</div></td>
-<td>
-<p>Resource Generation to which the Reconciled Condition refers.
-When this value is not equal to the object&rsquo;s metadata generation, reconciled condition  calculation for the current
-generation is still in progress.  See <a href="https://istio.io/latest/docs/reference/config/config-status/">https://istio.io/latest/docs/reference/config/config-status/</a> for more info.</p>
-
-</td>
-</tr>
 </tbody>
 </table>
 </section>
@@ -111,6 +100,15 @@ Can be True, False, Unknown.</p>
 </div></td>
 <td>
 <p>Human-readable message indicating details about last transition.</p>
+
+</td>
+</tr>
+<tr id="IstioCondition-observed_generation">
+<td><div class="field"><div class="name"><code><a href="#IstioCondition-observed_generation">observedGeneration</a></code></div>
+<div class="type">int64</div>
+</div></td>
+<td>
+<p>Resource Generation to which the Condition refers.</p>
 
 </td>
 </tr>

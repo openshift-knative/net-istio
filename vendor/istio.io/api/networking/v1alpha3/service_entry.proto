@@ -14,12 +14,6 @@
 
 syntax = "proto3";
 
-import "google/api/field_behavior.proto";
-import "networking/v1alpha3/sidecar.proto";
-import "networking/v1alpha3/workload_entry.proto";
-import "analysis/v1alpha1/message.proto";
-import "meta/v1alpha1/status.proto";
-
 // $schema: istio.networking.v1alpha3.ServiceEntry
 // $title: Service Entry
 // $description: Configuration affecting service registry.
@@ -166,7 +160,7 @@ import "meta/v1alpha1/status.proto";
 // kind: ServiceEntry
 // metadata:
 //   name: external-svc-httpbin
-//   namespace : egress
+//   namespace: egress
 // spec:
 //   hosts:
 //   - example.com
@@ -329,7 +323,7 @@ import "meta/v1alpha1/status.proto";
 // kind: ServiceEntry
 // metadata:
 //   name: httpbin
-//   namespace : httpbin-ns
+//   namespace: httpbin-ns
 // spec:
 //   hosts:
 //   - example.com
@@ -403,15 +397,20 @@ import "meta/v1alpha1/status.proto";
 // ```
 package istio.networking.v1alpha3;
 
-option go_package = "istio.io/api/networking/v1alpha3";
+import "analysis/v1alpha1/message.proto";
+import "google/api/field_behavior.proto";
+import "meta/v1alpha1/status.proto";
+import "networking/v1alpha3/sidecar.proto";
+import "networking/v1alpha3/workload_entry.proto";
 
+option go_package = "istio.io/api/networking/v1alpha3";
 
 // ServiceEntry enables adding additional entries into Istio's internal
 // service registry.
 //
 // <!-- crd generation tags
 // +cue-gen:ServiceEntry:groupName:networking.istio.io
-// +cue-gen:ServiceEntry:versions:v1beta1,v1alpha3,v1
+// +cue-gen:ServiceEntry:versions:v1,v1beta1,v1alpha3
 // +cue-gen:ServiceEntry:annotations:helm.sh/resource-policy=keep
 // +cue-gen:ServiceEntry:labels:app=istio-pilot,chart=istio,heritage=Tiller,release=istio
 // +cue-gen:ServiceEntry:subresource:status
@@ -437,10 +436,10 @@ option go_package = "istio.io/api/networking/v1alpha3";
 // +k8s:deepcopy-gen=true
 // istiostatus-override: ServiceEntryStatus: istio.io/api/networking/v1alpha3
 // -->
-// +kubebuilder:validation:XValidation:message="only one of WorkloadSelector or Endpoints can be set",rule="(has(self.workloadSelector)?1:0)+(has(self.endpoints)?1:0)<=1"
-// +kubebuilder:validation:XValidation:message="CIDR addresses are allowed only for NONE/STATIC resolution types",rule="!(has(self.addresses) && self.addresses.exists(k, k.contains('/')) && (has(self.resolution) && self.resolution != 'STATIC' && self.resolution != 'NONE'))"
-// +kubebuilder:validation:XValidation:message="NONE mode cannot set endpoints",rule="(!has(self.resolution) || self.resolution == 'NONE') ? !has(self.endpoints) : true"
-// +kubebuilder:validation:XValidation:message="DNS_ROUND_ROBIN mode cannot have multiple endpoints",rule="(has(self.resolution) && self.resolution == 'DNS_ROUND_ROBIN') ? (!has(self.endpoints) || size(self.endpoints) == 1) : true"
+// +kubebuilder:validation:XValidation:message="only one of WorkloadSelector or Endpoints can be set",rule="oneof(self.workloadSelector, self.endpoints)"
+// +kubebuilder:validation:XValidation:message="CIDR addresses are allowed only for NONE/STATIC resolution types",rule="!(default(self.addresses, []).exists(k, k.contains('/')) && !(default(self.resolution, 'NONE') in ['STATIC', 'NONE']))"
+// +kubebuilder:validation:XValidation:message="NONE mode cannot set endpoints",rule="default(self.resolution, 'NONE') == 'NONE' ? !has(self.endpoints) : true"
+// +kubebuilder:validation:XValidation:message="DNS_ROUND_ROBIN mode cannot have multiple endpoints",rule="default(self.resolution, '') == 'DNS_ROUND_ROBIN' ? default(self.endpoints, []).size() <= 1 : true"
 message ServiceEntry {
   // The hosts associated with the ServiceEntry. Could be a DNS
   // name with wildcard prefix.
@@ -500,9 +499,7 @@ message ServiceEntry {
   // Location specifies whether the service is part of Istio mesh or
   // outside the mesh.  Location determines the behavior of several
   // features, such as service-to-service mTLS authentication, policy
-  // enforcement, etc. When communicating with services outside the mesh,
-  // Istio's mTLS authentication is disabled, and policy enforcement is
-  // performed on the client-side as opposed to server-side.
+  // enforcement, etc.
   enum Location {
     // Signifies that the service is external to the mesh. Typically used
     // to indicate external services consumed through APIs.
@@ -513,7 +510,7 @@ message ServiceEntry {
     // mesh to include unmanaged infrastructure (e.g., VMs added to a
     // Kubernetes based service mesh).
     MESH_INTERNAL = 1;
-  };
+  }
 
   // Specify whether the service should be considered external to the mesh
   // or part of the mesh.
@@ -561,7 +558,7 @@ message ServiceEntry {
     // specified in the hosts field, if wildcards are not used. DNS resolution
     // cannot be used with Unix domain socket endpoints.
     DNS_ROUND_ROBIN = 3;
-  };
+  }
 
   // Service resolution mode for the hosts. Care must be taken
   // when setting the resolution mode to NONE for a TCP port without
@@ -661,11 +658,10 @@ message ServiceEntryStatus {
 }
 
 // A minor abstraction to allow for adding hostnames if relevant.
-message ServiceEntryAddress{
+message ServiceEntryAddress {
   // The address (e.g. 192.168.0.2)
   string value = 1;
 
   // The host name associated with this address
   string host = 2;
 }
-
