@@ -425,8 +425,8 @@ istio.io/api/meta/v1alpha1
 istio.io/api/networking/v1alpha3
 istio.io/api/networking/v1beta1
 istio.io/api/type/v1beta1
-# istio.io/client-go v1.27.0
-## explicit; go 1.23.0
+# istio.io/client-go v1.22.2
+## explicit; go 1.22
 istio.io/client-go/pkg/apis/networking/v1beta1
 # k8s.io/api v0.32.1
 ## explicit; go 1.23.0
