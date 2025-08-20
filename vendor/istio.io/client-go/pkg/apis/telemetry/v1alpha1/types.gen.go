@@ -49,7 +49,7 @@ import (
 // +genclient
 // +k8s:deepcopy-gen=true
 // -->
-// +kubebuilder:validation:XValidation:message="only one of targetRefs or selector can be set",rule="oneof(self.selector, self.targetRef, self.targetRefs)"
+// +kubebuilder:validation:XValidation:message="only one of targetRefs or selector can be set",rule="(has(self.selector)?1:0)+(has(self.targetRef)?1:0)+(has(self.targetRefs)?1:0)<=1"
 type Telemetry struct {
 	v1.TypeMeta `json:",inline"`
 	// +optional
@@ -59,7 +59,7 @@ type Telemetry struct {
 	// +optional
 	Spec telemetryv1alpha1.Telemetry `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
-	Status metav1alpha1.IstioStatus `json:"status,omitempty"`
+	Status metav1alpha1.IstioStatus `json:"status"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

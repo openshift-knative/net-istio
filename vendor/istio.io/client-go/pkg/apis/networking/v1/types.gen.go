@@ -30,7 +30,7 @@ import (
 //
 // <!-- crd generation tags
 // +cue-gen:DestinationRule:groupName:networking.istio.io
-// +cue-gen:DestinationRule:versions:v1,v1beta1,v1alpha3
+// +cue-gen:DestinationRule:versions:v1beta1,v1alpha3,v1
 // +cue-gen:DestinationRule:annotations:helm.sh/resource-policy=keep
 // +cue-gen:DestinationRule:labels:app=istio-pilot,chart=istio,heritage=Tiller,release=istio
 // +cue-gen:DestinationRule:subresource:status
@@ -40,7 +40,7 @@ import (
 // +cue-gen:DestinationRule:printerColumn:name=Age,type=date,JSONPath=.metadata.creationTimestamp,description="CreationTimestamp is a timestamp
 // representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations.
 // Clients may not set this value. It is represented in RFC3339 form and is in UTC.
-// Populated by the system. Read-only. Null for lists. For more information, see [Kubernetes API Conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata)"
+// Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata"
 // +cue-gen:DestinationRule:preserveUnknownFields:false
 // -->
 //
@@ -59,7 +59,7 @@ type DestinationRule struct {
 	// +optional
 	Spec v1alpha3.DestinationRule `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
-	Status v1alpha1.IstioStatus `json:"status,omitempty"`
+	Status v1alpha1.IstioStatus `json:"status"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -80,7 +80,7 @@ type DestinationRuleList struct {
 //
 // <!-- crd generation tags
 // +cue-gen:Gateway:groupName:networking.istio.io
-// +cue-gen:Gateway:versions:v1,v1beta1,v1alpha3
+// +cue-gen:Gateway:versions:v1beta1,v1alpha3,v1
 // +cue-gen:Gateway:annotations:helm.sh/resource-policy=keep
 // +cue-gen:Gateway:labels:app=istio-pilot,chart=istio,heritage=Tiller,release=istio
 // +cue-gen:Gateway:subresource:status
@@ -104,7 +104,7 @@ type Gateway struct {
 	// +optional
 	Spec v1alpha3.Gateway `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
-	Status v1alpha1.IstioStatus `json:"status,omitempty"`
+	Status v1alpha1.IstioStatus `json:"status"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -125,7 +125,7 @@ type GatewayList struct {
 //
 // <!-- crd generation tags
 // +cue-gen:ServiceEntry:groupName:networking.istio.io
-// +cue-gen:ServiceEntry:versions:v1,v1beta1,v1alpha3
+// +cue-gen:ServiceEntry:versions:v1beta1,v1alpha3,v1
 // +cue-gen:ServiceEntry:annotations:helm.sh/resource-policy=keep
 // +cue-gen:ServiceEntry:labels:app=istio-pilot,chart=istio,heritage=Tiller,release=istio
 // +cue-gen:ServiceEntry:subresource:status
@@ -151,10 +151,10 @@ type GatewayList struct {
 // +k8s:deepcopy-gen=true
 // istiostatus-override: ServiceEntryStatus: istio.io/api/networking/v1alpha3
 // -->
-// +kubebuilder:validation:XValidation:message="only one of WorkloadSelector or Endpoints can be set",rule="oneof(self.workloadSelector, self.endpoints)"
-// +kubebuilder:validation:XValidation:message="CIDR addresses are allowed only for NONE/STATIC resolution types",rule="!(default(self.addresses, []).exists(k, k.contains('/')) && !(default(self.resolution, 'NONE') in ['STATIC', 'NONE']))"
-// +kubebuilder:validation:XValidation:message="NONE mode cannot set endpoints",rule="default(self.resolution, 'NONE') == 'NONE' ? !has(self.endpoints) : true"
-// +kubebuilder:validation:XValidation:message="DNS_ROUND_ROBIN mode cannot have multiple endpoints",rule="default(self.resolution, ”) == 'DNS_ROUND_ROBIN' ? default(self.endpoints, []).size() <= 1 : true"
+// +kubebuilder:validation:XValidation:message="only one of WorkloadSelector or Endpoints can be set",rule="(has(self.workloadSelector)?1:0)+(has(self.endpoints)?1:0)<=1"
+// +kubebuilder:validation:XValidation:message="CIDR addresses are allowed only for NONE/STATIC resolution types",rule="!(has(self.addresses) && self.addresses.exists(k, k.contains('/')) && (has(self.resolution) && self.resolution != 'STATIC' && self.resolution != 'NONE'))"
+// +kubebuilder:validation:XValidation:message="NONE mode cannot set endpoints",rule="(!has(self.resolution) || self.resolution == 'NONE') ? !has(self.endpoints) : true"
+// +kubebuilder:validation:XValidation:message="DNS_ROUND_ROBIN mode cannot have multiple endpoints",rule="(has(self.resolution) && self.resolution == 'DNS_ROUND_ROBIN') ? (!has(self.endpoints) || size(self.endpoints) == 1) : true"
 type ServiceEntry struct {
 	metav1.TypeMeta `json:",inline"`
 	// +optional
@@ -164,7 +164,7 @@ type ServiceEntry struct {
 	// +optional
 	Spec v1alpha3.ServiceEntry `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
-	Status v1alpha3.ServiceEntryStatus `json:"status,omitempty"`
+	Status v1alpha3.ServiceEntryStatus `json:"status"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -186,7 +186,7 @@ type ServiceEntryList struct {
 //
 // <!-- crd generation tags
 // +cue-gen:Sidecar:groupName:networking.istio.io
-// +cue-gen:Sidecar:versions:v1,v1beta1,v1alpha3
+// +cue-gen:Sidecar:versions:v1beta1,v1alpha3,v1
 // +cue-gen:Sidecar:annotations:helm.sh/resource-policy=keep
 // +cue-gen:Sidecar:labels:app=istio-pilot,chart=istio,heritage=Tiller,release=istio
 // +cue-gen:Sidecar:subresource:status
@@ -210,7 +210,7 @@ type Sidecar struct {
 	// +optional
 	Spec v1alpha3.Sidecar `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
-	Status v1alpha1.IstioStatus `json:"status,omitempty"`
+	Status v1alpha1.IstioStatus `json:"status"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -230,7 +230,7 @@ type SidecarList struct {
 //
 // <!-- crd generation tags
 // +cue-gen:VirtualService:groupName:networking.istio.io
-// +cue-gen:VirtualService:versions:v1,v1beta1,v1alpha3
+// +cue-gen:VirtualService:versions:v1beta1,v1alpha3,v1
 // +cue-gen:VirtualService:annotations:helm.sh/resource-policy=keep
 // +cue-gen:VirtualService:labels:app=istio-pilot,chart=istio,heritage=Tiller,release=istio
 // +cue-gen:VirtualService:subresource:status
@@ -261,7 +261,7 @@ type VirtualService struct {
 	// +optional
 	Spec v1alpha3.VirtualService `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
-	Status v1alpha1.IstioStatus `json:"status,omitempty"`
+	Status v1alpha1.IstioStatus `json:"status"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -281,7 +281,7 @@ type VirtualServiceList struct {
 //
 // <!-- crd generation tags
 // +cue-gen:WorkloadEntry:groupName:networking.istio.io
-// +cue-gen:WorkloadEntry:versions:v1,v1beta1,v1alpha3
+// +cue-gen:WorkloadEntry:versions:v1beta1,v1alpha3,v1
 // +cue-gen:WorkloadEntry:annotations:helm.sh/resource-policy=keep
 // +cue-gen:WorkloadEntry:labels:app=istio-pilot,chart=istio,heritage=Tiller,release=istio
 // +cue-gen:WorkloadEntry:subresource:status
@@ -303,7 +303,7 @@ type VirtualServiceList struct {
 // +k8s:deepcopy-gen=true
 // -->
 // +kubebuilder:validation:XValidation:message="Address is required",rule="has(self.address) || has(self.network)"
-// +kubebuilder:validation:XValidation:message="UDS may not include ports",rule="(default(self.address, "").startsWith('unix://')) ? !has(self.ports) : true"
+// +kubebuilder:validation:XValidation:message="UDS may not include ports",rule="(has(self.address) && self.address.startsWith('unix://')) ? !has(self.ports) : true"
 type WorkloadEntry struct {
 	metav1.TypeMeta `json:",inline"`
 	// +optional
@@ -313,7 +313,7 @@ type WorkloadEntry struct {
 	// +optional
 	Spec v1alpha3.WorkloadEntry `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
-	Status v1alpha1.IstioStatus `json:"status,omitempty"`
+	Status v1alpha1.IstioStatus `json:"status"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -337,7 +337,7 @@ type WorkloadEntryList struct {
 //
 // <!-- crd generation tags
 // +cue-gen:WorkloadGroup:groupName:networking.istio.io
-// +cue-gen:WorkloadGroup:versions:v1,v1beta1,v1alpha3
+// +cue-gen:WorkloadGroup:versions:v1beta1,v1alpha3,v1
 // +cue-gen:WorkloadGroup:labels:app=istio-pilot,chart=istio,heritage=Tiller,release=istio
 // +cue-gen:WorkloadGroup:subresource:status
 // +cue-gen:WorkloadGroup:scope:Namespaced
@@ -365,7 +365,7 @@ type WorkloadGroup struct {
 	// +optional
 	Spec v1alpha3.WorkloadGroup `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
-	Status v1alpha1.IstioStatus `json:"status,omitempty"`
+	Status v1alpha1.IstioStatus `json:"status"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
