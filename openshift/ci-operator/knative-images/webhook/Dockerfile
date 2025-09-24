@@ -30,6 +30,7 @@ LABEL \
       description="Red Hat OpenShift Serverless 1 Net Istio Webhook" \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Net Istio Webhook" \
       io.k8s.description="Red Hat OpenShift Serverless Net Istio Webhook" \
-      io.openshift.tags="webhook"
+      io.openshift.tags="webhook" \
+      cpe="cpe:/a:redhat:openshift_serverless:1.35::el8"
 
 ENTRYPOINT ["/ko-app/webhook"]
