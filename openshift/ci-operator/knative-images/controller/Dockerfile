@@ -30,6 +30,9 @@ LABEL \
       description="Red Hat OpenShift Serverless 1 Net Istio Controller" \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Net Istio Controller" \
       io.k8s.description="Red Hat OpenShift Serverless Net Istio Controller" \
-      io.openshift.tags="controller"
-
+      io.openshift.tags="controller" \
+      vendor="Red Hat, Inc." \
+      release=$VERSION \
+      cpe="cpe:/a:redhat:openshift_serverless:1.36::el8"
+      
 ENTRYPOINT ["/ko-app/controller"]
