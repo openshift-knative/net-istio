@@ -73,7 +73,8 @@ func NewDefaultingAdmissionController(ctx context.Context, _ configmap.Watcher) 
 		},
 
 		// Whether to disallow unknown fields.
-		true,
+		// SRVKS-1351: allow unknown fields to support k8s 1.35
+		false,
 	)
 }
 
