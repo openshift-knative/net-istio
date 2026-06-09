@@ -16,8 +16,8 @@ jobs:
       fail-fast: false # Keep running if one leg fails.
       matrix:
         k8s-version:
-        - v1.30.x
         - v1.31.x
+        - v1.35.x
 
         test-suite:
         - ./test/conformance
@@ -37,12 +37,12 @@ jobs:
     - uses: knative/actions/setup-go@main
     - uses: ko-build/setup-ko@v0.6
     - uses: actions/checkout@v4
-    - uses: chainguard-dev/actions/setup-kind@v1.4.2
+    - uses: chainguard-dev/actions/setup-kind@v1.6.22
       id: kind
       with:
         k8s-version: ${{ matrix.k8s-version }}
         kind-worker-count: 1
-        cluster-suffix: "${CLUSTER_SUFFIX}"
+        cluster-suffix: c${{ github.run_id }}.local
 
     - name: Install Knative net-istio
       run: |
