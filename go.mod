@@ -4,8 +4,8 @@ go 1.25.0
 
 require (
 	github.com/google/go-cmp v0.7.0
-	go.uber.org/zap v1.27.1
-	golang.org/x/sync v0.20.0
+	go.uber.org/zap v1.28.0
+	golang.org/x/sync v0.22.0
 	google.golang.org/protobuf v1.36.11
 	istio.io/api v1.29.2-0.20260408155000-a0e4e1cbfcc5
 	istio.io/client-go v1.29.2
