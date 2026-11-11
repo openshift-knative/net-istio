@@ -36,12 +36,12 @@ jobs:
     - uses: knative/actions/setup-go@main
     - uses: ko-build/setup-ko@v0.6
     - uses: actions/checkout@v4
-    - uses: chainguard-dev/actions/setup-kind@main
+    - uses: chainguard-dev/actions/setup-kind@v1.6.42
       id: kind
       with:
         k8s-version: ${{ matrix.k8s-version }}
         kind-worker-count: 1
-        cluster-suffix: "${CLUSTER_SUFFIX}"
+        cluster-suffix: c${{ github.run_id }}.local
 
     - name: Install Knative net-istio
       run: |
